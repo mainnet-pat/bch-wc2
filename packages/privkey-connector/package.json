@@ -9,7 +9,7 @@
     "postinstall": "yarn run --cwd='../..' patch-package --patch-dir packages/privkey-connector/patches"
   },
   "dependencies": {
-    "@bch-wc2/interfaces": "0.0.1"
+    "@bch-wc2/interfaces": "^0.0.1"
   },
   "peerDependencies": {
     "@bitauth/libauth": "^3.1.0-next.2"
