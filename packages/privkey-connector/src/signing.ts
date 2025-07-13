@@ -7,7 +7,7 @@ export const signWcTransaction = (wcSignTransactionRequest: WcSignTransactionReq
   const { transaction: wcTransactionItem, sourceOutputs } = wcSignTransactionRequest;
   const { privateKey } = signingInfo;
   const pubkeyCompressed = signingInfo.pubkeyCompressed ?? secp256k1.derivePublicKeyCompressed(privateKey) as Uint8Array;
-  const walletLockingBytecodeHex = signingInfo.walletLockingBytecodeHex ?? encodeLockingBytecodeP2pkh(hash160(pubkeyCompressed));
+  const walletLockingBytecodeHex = signingInfo.walletLockingBytecodeHex ?? binToHex(encodeLockingBytecodeP2pkh(hash160(pubkeyCompressed)));
 
   // prepare libauth template for input signing
   const walletTemplate = importWalletTemplate(walletTemplateP2pkhNonHd);
