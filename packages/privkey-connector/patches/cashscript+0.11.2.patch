@@ -1,0 +1,83 @@
+diff --git a/node_modules/cashscript/dist/network/MockNetworkProvider.d.ts b/node_modules/cashscript/dist/network/MockNetworkProvider.d.ts
+index 9fdeb86..4f0685f 100644
+--- a/node_modules/cashscript/dist/network/MockNetworkProvider.d.ts
++++ b/node_modules/cashscript/dist/network/MockNetworkProvider.d.ts
+@@ -11,6 +11,6 @@ export default class MockNetworkProvider implements NetworkProvider {
+     getBlockHeight(): Promise<number>;
+     getRawTransaction(txid: string): Promise<string>;
+     sendRawTransaction(txHex: string): Promise<string>;
+-    addUtxo(address: string, utxo: Utxo): void;
++    addUtxo(addressOrLockingBytecode: string, utxo: Utxo): void;
+     reset(): void;
+ }
+diff --git a/node_modules/cashscript/dist/network/MockNetworkProvider.js b/node_modules/cashscript/dist/network/MockNetworkProvider.js
+index eda3eff..6215834 100644
+--- a/node_modules/cashscript/dist/network/MockNetworkProvider.js
++++ b/node_modules/cashscript/dist/network/MockNetworkProvider.js
+@@ -1,4 +1,4 @@
+-import { binToHex, hexToBin } from '@bitauth/libauth';
++import { binToHex, decodeTransaction, hexToBin, isHex } from '@bitauth/libauth';
+ import { sha256 } from '@cashscript/utils';
+ import { Network } from '../interfaces.js';
+ import { addressToLockScript, randomUtxo } from '../utils.js';
+@@ -8,6 +8,7 @@ const bobAddress = 'bchtest:qz6q5gqnxdldkr07xpls5474mmzmlesd6qnux4skuc';
+ const carolAddress = 'bchtest:qqsr7nqwe6rq5crj63gy5gdqchpnwmguusmr7tfmsj';
+ export default class MockNetworkProvider {
+     constructor() {
++        // we use lockingBytecode as the key for utxoMap to make cashaddresses and tokenaddresses interchangeable
+         this.utxoMap = {};
+         this.transactionMap = {};
+         this.network = Network.MOCKNET;
+@@ -34,11 +35,50 @@ export default class MockNetworkProvider {
+     async sendRawTransaction(txHex) {
+         const transactionBin = hexToBin(txHex);
+         const txid = binToHex(sha256(sha256(transactionBin)).reverse());
++        if (this.transactionMap[txid]) {
++            throw new Error(`Transaction with txid ${txid} was already submitted: txn-mempool-conflict`);
++        }
+         this.transactionMap[txid] = txHex;
++        const decoded = decodeTransaction(transactionBin);
++        if (typeof decoded === 'string') {
++            throw new Error(`${decoded}`);
++        }
++        // remove (spend) UTXOs from the map
++        for (const input of decoded.inputs) {
++            for (const address of Object.keys(this.utxoMap)) {
++                const utxos = this.utxoMap[address];
++                const index = utxos.findIndex((utxo) => utxo.txid === binToHex(input.outpointTransactionHash) && utxo.vout === input.outpointIndex);
++                if (index !== -1) {
++                    // Remove the UTXO from the map
++                    utxos.splice(index, 1);
++                    this.utxoMap[address] = utxos;
++                    break; // Exit loop after finding and removing the UTXO
++                }
++                if (utxos.length === 0) {
++                    delete this.utxoMap[address]; // Clean up empty address entries
++                }
++            }
++        }
++        // add new UTXOs to the map
++        for (const [index, output] of decoded.outputs.entries()) {
++            this.addUtxo(binToHex(output.lockingBytecode), {
++                txid: txid,
++                vout: index,
++                satoshis: output.valueSatoshis,
++                token: output.token && {
++                    ...output.token,
++                    category: binToHex(output.token.category),
++                    nft: output.token.nft && {
++                        ...output.token.nft,
++                        commitment: binToHex(output.token.nft.commitment),
++                    },
++                },
++            });
++        }
+         return txid;
+     }
+-    addUtxo(address, utxo) {
+-        const lockingBytecode = binToHex(addressToLockScript(address));
++    addUtxo(addressOrLockingBytecode, utxo) {
++        const lockingBytecode = isHex(addressOrLockingBytecode) ? addressOrLockingBytecode : binToHex(addressToLockScript(addressOrLockingBytecode));
+         if (!this.utxoMap[lockingBytecode]) {
+             this.utxoMap[lockingBytecode] = [];
+         }

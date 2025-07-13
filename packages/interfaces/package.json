@@ -1,0 +1,18 @@
+{
+  "name": "@bch-wc2/interfaces",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "@bitauth/libauth": "^3.1.0-next.2"
+  },
+  "devDependencies": {
+    "@bitauth/libauth": "^3.1.0-next.2",
+    "typescript": "^5.8.3"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@bch-wc2/root",
+  "private": true,
+  "version": "0.0.1",
+  "workspaces": [
+    "packages/*"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "lerna": "^8.2.3"
+  },
+  "scripts": {
+    "publish": "lerna publish from-package",
+    "build": "lerna run build"
+  }
+}
