@@ -1,5 +1,5 @@
-import { binToBase64, binToHex, CompilationContextBch, decodeTransaction, encodeLockingBytecodeP2pkh, encodeTransaction, generateSigningSerializationBCH, generateTransaction, hash160, hash256, hexToBin, importWalletTemplate, Input, Output, secp256k1, sha256, SigningSerializationFlag, TransactionTemplate, utf8ToBin, walletTemplateP2pkhNonHd, walletTemplateToCompilerBch } from "@bitauth/libauth";
 import { WcSignMessageRequest, WcSignTransactionRequest } from "@bch-wc2/interfaces";
+import { binToBase64, binToHex, CompilationContextBch, decodeTransaction, encodeLockingBytecodeP2pkh, encodeTransaction, generateSigningSerializationBch, generateTransaction, hash160, hash256, hexToBin, importWalletTemplate, secp256k1, sha256, SigningSerializationFlag, TransactionTemplate, utf8ToBin, walletTemplateP2pkhNonHd, walletTemplateToCompilerBch } from "@bitauth/libauth";
 
 export const signWcTransaction = (wcSignTransactionRequest: WcSignTransactionRequest,
   signingInfo: { privateKey: Uint8Array, pubkeyCompressed?: Uint8Array, walletLockingBytecodeHex?: string },
@@ -45,7 +45,7 @@ export const signWcTransaction = (wcSignTransactionRequest: WcSignTransactionReq
         if (!coveredBytecode) {
           throw new Error("Not enough information provided, please include contract redeemScript");
         }
-        const sighashPreimage = generateSigningSerializationBCH(context, { coveredBytecode, signingSerializationType });
+        const sighashPreimage = generateSigningSerializationBch(context, { coveredBytecode, signingSerializationType });
         const sighash = hash256(sighashPreimage);
         const signature = secp256k1.signMessageHashSchnorr(privateKey, sighash);
         if (typeof signature === "string") {

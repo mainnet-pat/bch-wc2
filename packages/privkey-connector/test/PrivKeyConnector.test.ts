@@ -3,8 +3,8 @@ import { Contract, MockNetworkProvider, placeholderPublicKey, placeholderSignatu
 import { SendRequest } from 'mainnet-js';
 import { describe, expect, test } from 'vitest';
 import { PrivKeyConnector, signWcTransaction } from '../src/index.js';
-import { aliceAddress, alicePkh, alicePriv, bobAddress, generateWcTransactionObject, MockWallet } from './shared.js';
 import P2pkhArtifact from './P2pkh.artifact.js';
+import { aliceAddress, alicePkh, alicePriv, bobAddress, generateWcTransactionObject, MockWallet } from './shared.js';
 
 describe("WalletConnect", () => {
   test("Creating unsigned transactions and signing them", async () => {

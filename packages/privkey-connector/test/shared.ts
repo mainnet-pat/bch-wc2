@@ -1,9 +1,9 @@
-import { Input, Output, TransactionCommon, binToHex, encodeCashAddress, encodePrivateKeyWif, hash160, hexToBin, secp256k1 } from "@bitauth/libauth";
 import { ContractInfo, WcSignTransactionRequest } from "@bch-wc2/interfaces";
+import { Input, Output, TransactionCommon, binToHex, encodeCashAddress, encodePrivateKeyWif, hash160, hexToBin, secp256k1 } from "@bitauth/libauth";
+import { MockNetworkProvider, SignatureTemplate } from "cashscript";
+import { TestNetWallet, TokenI, UtxoI } from "mainnet-js";
 import { NetworkProvider } from "../src/PrivKeyConnector.js";
 import { signWcTransaction } from "../src/signing.js";
-import { SignatureTemplate, MockNetworkProvider } from "cashscript";
-import { TestNetWallet, UtxoI, TokenI } from "mainnet-js";
 
 export const alicePriv = hexToBin('1'.repeat(64));
 export const aliceSigTemplate = new SignatureTemplate(alicePriv);

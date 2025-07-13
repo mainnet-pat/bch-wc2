@@ -1,5 +1,5 @@
-import { secp256k1, encodeLockingBytecodeP2pkh, encodeCashAddress, binToHex, sha256, utf8ToBin, hexToBin, binToBase64 } from "@bitauth/libauth";
 import { IConnector, WcSignMessageRequest, WcSignTransactionRequest, WcSignTransactionResponse } from "@bch-wc2/interfaces";
+import { binToHex, encodeCashAddress, encodeLockingBytecodeP2pkh, hexToBin, secp256k1, sha256 } from "@bitauth/libauth";
 import { signMessage, signWcTransaction } from "./signing";
 
 export interface NetworkProvider {
