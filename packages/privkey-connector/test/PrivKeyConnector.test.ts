@@ -1,10 +1,10 @@
 import { binToHex } from '@bitauth/libauth';
-import { Contract, MockNetworkProvider, placeholderPublicKey, placeholderSignature, randomUtxo, TransactionBuilder, Utxo } from 'cashscript';
+import { Contract, MockNetworkProvider, placeholderP2PKHUnlocker, placeholderPublicKey, placeholderSignature, randomUtxo, TransactionBuilder, Utxo } from 'cashscript';
 import { SendRequest } from 'mainnet-js';
 import { describe, expect, test } from 'vitest';
 import { PrivKeyConnector, signWcTransaction } from '../src/index.js';
 import P2pkhArtifact from './P2pkh.artifact.js';
-import { aliceAddress, alicePkh, alicePriv, bobAddress, generateWcTransactionObject, MockWallet } from './shared.js';
+import { aliceAddress, alicePkh, alicePriv, aliceSigTemplate, bobAddress, generateWcTransactionObject, MockWallet } from './shared.js';
 
 describe("WalletConnect", () => {
   test("Creating unsigned transactions and signing them", async () => {
@@ -103,7 +103,10 @@ describe("WalletConnect", () => {
 
     expect(await p2pkhContract.getUtxos()).toHaveLength(1);
 
+    const p2pkhInput = (await provider.getUtxos(aliceAddress))[0]!;
+
     const builder = new TransactionBuilder({ provider })
+      .addInput(p2pkhInput, placeholderP2PKHUnlocker(aliceAddress))
       .addInput((await p2pkhContract.getUtxos())[0], p2pkhContract.unlock.spend(placeholderPublicKey(), placeholderSignature()))
       .addOutput({ to: bobAddress, amount: 9000n });
 
