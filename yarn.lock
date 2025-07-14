@@ -2909,11 +2909,12 @@ magic-string@^0.30.17:
   dependencies:
     "@jridgewell/sourcemap-codec" "^1.5.0"
 
-mainnet-js@^2.7.6:
-  version "2.7.6"
-  resolved "https://registry.yarnpkg.com/mainnet-js/-/mainnet-js-2.7.6.tgz#ecd4b0c6204b5cdd5bc753c4b14e603ad5ce4623"
-  integrity sha512-t9Yq5S9LkEMQaHfox6y60vULeZWyQGlyoKXL8p/+/R2qm2YeXsjFwDdLIB9zdZqDmnjR0yD6MbmSlJ7uF3EVig==
+mainnet-js@^2.7.7:
+  version "2.7.7"
+  resolved "https://registry.yarnpkg.com/mainnet-js/-/mainnet-js-2.7.7.tgz#9854738dc894f369336734197f7dff246cf61a00"
+  integrity sha512-vFb9Y9ek3x1nRPRSO22u2AOG8GSxgGWl3UFxCpReP/ZzgwQUVjOMrXD/vL/ncpshQ4H3kQpGC7JZc30iHmQNMA==
   dependencies:
+    "@bch-wc2/interfaces" "^0.0.4"
     "@bitauth/libauth" "^3.1.0-next.2"
     "@electrum-cash/network" "^4.1.1"
     "@scure/bip39" "^1.2.2"

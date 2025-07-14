@@ -10,7 +10,7 @@
     "lerna": "^8.2.3"
   },
   "scripts": {
-    "prepublish": "build",
+    "prepublish": "yarn build",
     "publish": "lerna exec -- yarn publish --access=public",
     "build": "lerna run build",
     "link": "lerna exec -- yarn link"

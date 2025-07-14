@@ -1,10 +1,10 @@
 import { binToHex } from '@bitauth/libauth';
 import { Contract, MockNetworkProvider, placeholderP2PKHUnlocker, placeholderPublicKey, placeholderSignature, randomUtxo, TransactionBuilder, Utxo } from 'cashscript';
-import { SendRequest } from 'mainnet-js';
+import { generateWcSignTransactionRequest, SendRequest } from 'mainnet-js';
 import { describe, expect, test } from 'vitest';
 import { PrivKeyConnector, signWcTransaction } from '../src/index.js';
 import P2pkhArtifact from './P2pkh.artifact.js';
-import { aliceAddress, alicePkh, alicePriv, aliceSigTemplate, bobAddress, generateWcTransactionObject, MockWallet } from './shared.js';
+import { aliceAddress, alicePkh, alicePriv, bobAddress, MockWallet } from './shared.js';
 
 describe("WalletConnect", () => {
   test("Creating unsigned transactions and signing them", async () => {
@@ -25,7 +25,7 @@ describe("WalletConnect", () => {
       queryBalance: false,
     });
 
-    const wcTransactionObject = generateWcTransactionObject(sendResponse, {
+    const wcTransactionObject = generateWcSignTransactionRequest(sendResponse, {
       userPrompt: "Please confirm the transaction",
     });
 
@@ -56,7 +56,7 @@ describe("WalletConnect", () => {
       queryBalance: false,
     });
 
-    const wcTransactionObject = generateWcTransactionObject(sendResponse, {
+    const wcTransactionObject = generateWcSignTransactionRequest(sendResponse, {
       userPrompt: "Please confirm the transaction",
       broadcast: true,
     });

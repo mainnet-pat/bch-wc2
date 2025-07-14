@@ -18,7 +18,7 @@
   "devDependencies": {
     "@bitauth/libauth": "^3.1.0-next.2",
     "cashscript": "^0.11.2",
-    "mainnet-js": "^2.7.6",
+    "mainnet-js": "^2.7.7",
     "patch-package": "^8.0.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"

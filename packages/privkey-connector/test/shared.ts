@@ -53,14 +53,6 @@ export interface WcTransactionOptions {
   userPrompt?: string;
 }
 
-export const generateWcTransactionObject = (sendResponse: SendResponse, options?: WcTransactionOptions): WcSignTransactionRequest => {
-  if (!sendResponse.unsignedTransaction || !sendResponse.sourceOutputs) {
-    throw new Error("SendResponse does not contain an unsigned transaction or source outputs");
-  }
-
-  return { ...options, transaction: sendResponse.unsignedTransaction, sourceOutputs: sendResponse.sourceOutputs };
-}
-
 export const processWcTransactionObject = async (
   wcTransactionObject: WcSignTransactionRequest,
   signingInfo: { privateKey: Uint8Array, pubkeyCompressed?: Uint8Array, walletLockingBytecodeHex?: string },
