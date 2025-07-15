@@ -1,6 +1,6 @@
 {
   "name": "@bch-wc2/privkey-connector",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "dist/index.js",
   "type": "module",
   "license": "MIT",
@@ -10,7 +10,7 @@
     "postinstall": "yarn run --cwd='../..' patch-package --patch-dir packages/privkey-connector/patches || true"
   },
   "dependencies": {
-    "@bch-wc2/interfaces": "^0.0.5"
+    "@bch-wc2/interfaces": "^0.0.6"
   },
   "peerDependencies": {
     "@bitauth/libauth": "^3.1.0-next.2"
