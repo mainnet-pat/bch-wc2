@@ -22,5 +22,6 @@
     "patch-package": "^8.0.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
-  }
+  },
+  "gitHead": "aeadd7a44b8f0c70529b95ff5fd206dd2e379492"
 }
