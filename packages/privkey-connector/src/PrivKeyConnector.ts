@@ -1,6 +1,6 @@
 import { IConnector, WcSignMessageRequest, WcSignTransactionRequest, WcSignTransactionResponse } from "@bch-wc2/interfaces";
 import { binToHex, encodeCashAddress, encodeLockingBytecodeP2pkh, hexToBin, secp256k1, sha256 } from "@bitauth/libauth";
-import { signMessage, signWcTransaction } from "./signing";
+import { signMessage, signWcTransaction } from "./signing.js";
 
 export interface NetworkProvider {
   sendRawTransaction: (hexTransaction: string) => Promise<string>;
