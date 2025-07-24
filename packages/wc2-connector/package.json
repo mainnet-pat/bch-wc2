@@ -1,0 +1,23 @@
+{
+  "name": "@bch-wc2/wc2-connector",
+  "version": "0.0.7",
+  "main": "dist/index.js",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@bch-wc2/interfaces": "^0.0.7",
+    "@walletconnect/sign-client": "^2.21.5"
+  },
+  "peerDependencies": {
+    "@bitauth/libauth": "^3.1.0-next.2"
+  },
+  "devDependencies": {
+    "@bitauth/libauth": "^3.1.0-next.2",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  }
+}
