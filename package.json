@@ -14,5 +14,6 @@
     "publish": "lerna exec -- yarn publish --access=public",
     "build": "lerna run build",
     "link": "lerna exec -- yarn link"
-  }
+  },
+  "packageManager": "yarn@4.9.2"
 }
