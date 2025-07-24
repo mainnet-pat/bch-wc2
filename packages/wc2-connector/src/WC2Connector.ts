@@ -1,17 +1,31 @@
-import { SignClient } from '@walletconnect/sign-client';
-import { binToHex, encodeTransaction, hexToBin, sha256 } from '@bitauth/libauth';
-import { WcSignTransactionRequest, WcSignTransactionResponse, WcSignMessageRequest, IConnector } from '@bch-wc2/interfaces';
+import { SignClient } from "@walletconnect/sign-client";
+import {
+  binToHex,
+  encodeTransaction,
+  hexToBin,
+  sha256,
+} from "@bitauth/libauth";
+import {
+  WcSignTransactionRequest,
+  WcSignTransactionResponse,
+  WcSignMessageRequest,
+  IConnector,
+} from "@bch-wc2/interfaces";
 
 export class WC2Connector implements IConnector {
   private signClient: InstanceType<typeof SignClient> | null = null;
   private sessionTopic: string | null = null;
   private listeners: { [event: string]: Function[] } = {};
 
-  constructor(private projectId: string, private metadata: any) {}
+  constructor(
+    private projectId: string,
+    private metadata: any,
+    private chainId: string = "bch:mainnet"
+  ) {}
 
   async connect(): Promise<void> {
     if (this.signClient) {
-      throw new Error('Already connected');
+      throw new Error("Already connected");
     }
 
     // Initialize the WalletConnect SignClient
@@ -19,71 +33,90 @@ export class WC2Connector implements IConnector {
       projectId: this.projectId,
       metadata: this.metadata,
     });
+    const existingSessions = this.signClient.session.getAll();
+    if (existingSessions.length > 0) {
+      this.sessionTopic = existingSessions[0].topic;
+      return;
+    }
 
     // Request connection and get pairing URI
     const { uri, approval } = await this.signClient.connect({
       requiredNamespaces: {
         bch: {
-          methods: ['bch_signTransaction', 'bch_signMessage', 'bch_getAddresses'],
-          chains: ['bch:mainnet'],
-          events: ['addressesChanged'],
+          methods: [
+            "bch_signTransaction",
+            "bch_signMessage",
+            "bch_getAddresses",
+          ],
+          chains: [this.chainId],
+          events: ["addressesChanged"],
         },
       },
     });
-
-    // Log the URI (for now, to display for pairing, e.g., in a QR code)
-    console.log('Pairing URI:', uri);
+    this.emit("pairingUri", uri);
 
     // Wait for wallet to approve the session
     const session = await approval();
     this.sessionTopic = session.topic;
 
     // Listen for session deletion (e.g., disconnection)
-    this.signClient.on('session_delete', () => {
+    this.signClient.on("session_delete", () => {
       this.sessionTopic = null;
-      this.emit('disconnect');
+      this.emit("disconnect");
     });
 
     // Listen for session updates (e.g., address changes)
-    this.signClient.on('session_update', (update) => {
+    this.signClient.on("session_update", (update) => {
       if (update.params.namespaces?.bch?.accounts) {
-        const newAddresses = update.params.namespaces.bch.accounts.map((account: string) => account.split(':')[2]);
-        this.emit('addressChanged', newAddresses[0]);
+        const newAddresses = update.params.namespaces.bch.accounts.map(
+          (account: string) => account.split(":")[2]
+        );
+        this.emit("addressChanged", newAddresses[0]);
       }
     });
   }
 
-  async signTransaction(options: WcSignTransactionRequest): Promise<WcSignTransactionResponse | undefined> {
+  async signTransaction(
+    options: WcSignTransactionRequest
+  ): Promise<WcSignTransactionResponse | undefined> {
     if (!this.signClient || !this.sessionTopic) {
-      throw new Error('No active session. Please connect first.');
+      throw new Error("No active session. Please connect first.");
     }
 
     // Serialize transaction (convert to hex if it's a Transaction object)
-    const transactionHex = typeof options.transaction === 'string' 
-      ? options.transaction 
-      : binToHex(encodeTransaction(options.transaction));
-      
+    const transactionHex =
+      typeof options.transaction === "string"
+        ? options.transaction
+        : binToHex(encodeTransaction(options.transaction));
+
     // Serialize sourceOutputs for WalletConnect
-    const serializedSourceOutputs = options.sourceOutputs.map(so => ({
+    const serializedSourceOutputs = options.sourceOutputs.map((so) => ({
       outpointTransactionHash: binToHex(so.outpointTransactionHash),
       outpointIndex: so.outpointIndex,
       sequenceNumber: so.sequenceNumber,
       lockingBytecode: binToHex(so.lockingBytecode),
       valueSatoshis: so.valueSatoshis,
-      token: so.token,
-      contract: so.contract ? {
-        abiFunction: so.contract.abiFunction,
-        redeemScript: binToHex(so.contract.redeemScript),
-        artifact: so.contract.artifact,
-      } : undefined,
+      token: so.token
+        ? {
+            category: binToHex(so.token.category),
+            amount: so.token.amount,
+          }
+        : undefined,
+      contract: so.contract
+        ? {
+            abiFunction: so.contract.abiFunction,
+            redeemScript: binToHex(so.contract.redeemScript),
+            artifact: so.contract.artifact,
+          }
+        : undefined,
     }));
 
     // Prepare the WalletConnect request
     const request = {
       topic: this.sessionTopic,
-      chainId: 'bch:mainnet',
+      chainId: this.chainId,
       request: {
-        method: 'bch_signTransaction',
+        method: "bch_signTransaction",
         params: {
           transaction: transactionHex,
           sourceOutputs: serializedSourceOutputs,
@@ -99,7 +132,9 @@ export class WC2Connector implements IConnector {
 
     // Compute the transaction hash
     const signedTransactionBin = hexToBin(signedTransactionHex);
-    const signedTransactionHash = binToHex(sha256.hash(sha256.hash(signedTransactionBin)).reverse());
+    const signedTransactionHash = binToHex(
+      sha256.hash(sha256.hash(signedTransactionBin)).reverse()
+    );
 
     return {
       signedTransaction: signedTransactionHex,
@@ -109,14 +144,14 @@ export class WC2Connector implements IConnector {
 
   async address(): Promise<string | undefined> {
     if (!this.signClient || !this.sessionTopic) {
-      throw new Error('No active session. Please connect first.');
+      throw new Error("No active session. Please connect first.");
     }
 
     const request = {
       topic: this.sessionTopic,
-      chainId: 'bch:mainnet',
+      chainId: this.chainId,
       request: {
-        method: 'bch_getAddresses',
+        method: "bch_getAddresses",
         params: {},
       },
     };
@@ -126,16 +161,18 @@ export class WC2Connector implements IConnector {
     return addresses[0]; // Return the first address
   }
 
-  async signMessage(options: WcSignMessageRequest): Promise<string | undefined> {
+  async signMessage(
+    options: WcSignMessageRequest
+  ): Promise<string | undefined> {
     if (!this.signClient || !this.sessionTopic) {
-      throw new Error('No active session. Please connect first.');
+      throw new Error("No active session. Please connect first.");
     }
 
     const request = {
       topic: this.sessionTopic,
-      chainId: 'bch:mainnet',
+      chainId: this.chainId,
       request: {
-        method: 'bch_signMessage',
+        method: "bch_signMessage",
         params: {
           message: options.message,
           userPrompt: options.userPrompt,
@@ -154,7 +191,7 @@ export class WC2Connector implements IConnector {
 
     await this.signClient.disconnect({
       topic: this.sessionTopic,
-      reason: { code: 1000, message: 'User disconnected' },
+      reason: { code: 1000, message: "User disconnected" },
     });
     this.sessionTopic = null;
     this.signClient = null;
