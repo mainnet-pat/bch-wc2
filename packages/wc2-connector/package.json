@@ -10,13 +10,22 @@
   },
   "dependencies": {
     "@bch-wc2/interfaces": "^0.0.7",
-    "@walletconnect/sign-client": "^2.21.5"
+    "@reown/appkit": "^1.7.17",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/react": "^16.3.0",
+    "@types/react-dom": "^19.1.7",
+    "@walletconnect/sign-client": "^2.21.5",
+    "@web3modal/standalone": "^2.4.3",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
   },
   "peerDependencies": {
     "@bitauth/libauth": "^3.1.0-next.2"
   },
   "devDependencies": {
     "@bitauth/libauth": "^3.1.0-next.2",
+    "@types/react": "^19.1.9",
+    "jsdom": "^26.1.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
   }

@@ -1,17 +1,5 @@
-import {
-  IConnector,
-  WcSignMessageRequest,
-  WcSignTransactionRequest,
-  WcSignTransactionResponse,
-} from "@bch-wc2/interfaces";
-import {
-  binToHex,
-  encodeCashAddress,
-  encodeLockingBytecodeP2pkh,
-  hexToBin,
-  secp256k1,
-  sha256,
-} from "@bitauth/libauth";
+import { IConnector, WcSignMessageRequest, WcSignTransactionRequest, WcSignTransactionResponse } from "@bch-wc2/interfaces";
+import { binToHex, encodeCashAddress, encodeLockingBytecodeP2pkh, hash160, hexToBin, secp256k1, sha256 } from "@bitauth/libauth";
 import { signMessage, signWcTransaction } from "./signing.js";
 
 export interface NetworkProvider {
@@ -33,10 +21,10 @@ export class PrivKeyConnector implements IConnector {
     walletLockingBytecodeHex,
     networkProvider,
   }: {
-    privateKey: Uint8Array;
-    pubkeyCompressed?: Uint8Array;
-    walletLockingBytecodeHex?: string;
-    networkProvider?: NetworkProvider;
+    privateKey: Uint8Array,
+    pubkeyCompressed?: Uint8Array,
+    walletLockingBytecodeHex?: string
+    networkProvider?: NetworkProvider,
   }) {
     this.privateKey = privateKey;
     this.networkProvider = networkProvider;
@@ -46,17 +34,13 @@ export class PrivKeyConnector implements IConnector {
     }
 
     if (!pubkeyCompressed) {
-      this.pubkeyCompressed = secp256k1.derivePublicKeyCompressed(
-        this.privateKey
-      ) as Uint8Array;
+      this.pubkeyCompressed = secp256k1.derivePublicKeyCompressed(this.privateKey) as Uint8Array;
     } else {
       this.pubkeyCompressed = pubkeyCompressed;
     }
 
     if (!walletLockingBytecodeHex) {
-      this.walletLockingBytecodeHex = binToHex(
-        encodeLockingBytecodeP2pkh(this.pubkeyCompressed) as Uint8Array
-      );
+      this.walletLockingBytecodeHex = binToHex(encodeLockingBytecodeP2pkh(hash160(this.pubkeyCompressed)) as Uint8Array);
     } else {
       this.walletLockingBytecodeHex = walletLockingBytecodeHex;
     }
@@ -68,9 +52,7 @@ export class PrivKeyConnector implements IConnector {
     }
 
     if (!this.pubkeyCompressed) {
-      this.pubkeyCompressed = secp256k1.derivePublicKeyCompressed(
-        this.privateKey
-      ) as Uint8Array;
+      this.pubkeyCompressed = secp256k1.derivePublicKeyCompressed(this.privateKey) as Uint8Array;
     }
 
     const address = encodeCashAddress<true>({
@@ -82,9 +64,7 @@ export class PrivKeyConnector implements IConnector {
     return address;
   }
 
-  async signTransaction(
-    options: WcSignTransactionRequest
-  ): Promise<WcSignTransactionResponse | undefined> {
+  async signTransaction(options: WcSignTransactionRequest): Promise<WcSignTransactionResponse | undefined> {
     const result = signWcTransaction(options, {
       privateKey: this.privateKey,
       pubkeyCompressed: this.pubkeyCompressed,
@@ -93,41 +73,32 @@ export class PrivKeyConnector implements IConnector {
 
     if (options.broadcast) {
       if (!this.networkProvider) {
-        throw new Error(
-          "NetworkProvider is required for broadcasting transactions"
-        );
+        throw new Error("NetworkProvider is required for broadcasting transactions");
       }
       await this.networkProvider.sendRawTransaction(binToHex(result));
     }
 
     return {
       signedTransaction: binToHex(result),
-      signedTransactionHash: binToHex(
-        sha256.hash(sha256.hash(result)).reverse()
-      ),
-    };
+      signedTransactionHash: binToHex(sha256.hash(sha256.hash(result)).reverse()),
+    }
   }
 
-  async signMessage(
-    options: WcSignMessageRequest
-  ): Promise<string | undefined> {
+  async signMessage(options: WcSignMessageRequest): Promise<string | undefined> {
     return signMessage(options, this.privateKey);
   }
 
   async connect(): Promise<void> {
     this._connected = true;
-  }
+  };
 
   async connected(): Promise<boolean> {
     return this._connected;
-  }
+  };
 
   async disconnect(): Promise<void> {
     this._connected = false;
-  }
+  };
 
-  on(
-    event: "addressChanged" | "disconnect" | string,
-    callback: Function
-  ): void {}
+  on(event: "addressChanged" | "disconnect" | string, callback: Function): void {}
 }
