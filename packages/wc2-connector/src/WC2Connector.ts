@@ -117,6 +117,7 @@ export class WC2Connector implements IConnector {
     });
 
     if (uri) {
+      console.log("Generated URI:", uri);
       if (this.web3Modal) {
         this.web3Modal.openModal({ uri, standaloneChains: [this.chainId] });
       } else if (this.displayUri) {
@@ -164,6 +165,7 @@ export class WC2Connector implements IConnector {
       });
 
       if (uri) {
+        console.log("Generated URI:", uri);
         if (this.web3Modal) {
           this.web3Modal.openModal({ uri, standaloneChains: [this.chainId] });
         } else if (this.displayUri) {
@@ -266,6 +268,7 @@ export class WC2Connector implements IConnector {
 
       const response = await this.signClient.request(request);
       const addresses = response as string[];
+      console.log("Addresses received:", addresses);
       return addresses[0];
     } catch (error) {
       this.log("Error getting address:", error);
