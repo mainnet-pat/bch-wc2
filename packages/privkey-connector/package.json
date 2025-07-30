@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "vitest",
-    "postinstall": "yarn run --cwd='../..' patch-package --patch-dir packages/privkey-connector/patches || true"
+    "postinstall": "patch-package --patch-dir patches"
   },
   "dependencies": {
     "@bch-wc2/interfaces": "^0.0.8"
