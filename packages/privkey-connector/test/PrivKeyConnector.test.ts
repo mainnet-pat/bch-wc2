@@ -1,10 +1,28 @@
+import { WcSignTransactionRequest } from '@bch-wc2/interfaces';
 import { binToHex } from '@bitauth/libauth';
-import { Contract, MockNetworkProvider, placeholderP2PKHUnlocker, placeholderPublicKey, placeholderSignature, randomUtxo, TransactionBuilder, Utxo } from 'cashscript';
-import { generateWcSignTransactionRequest, SendRequest } from 'mainnet-js';
+import { Contract, MockNetworkProvider, placeholderP2PKHUnlocker, placeholderPublicKey, placeholderSignature, randomUtxo, TransactionBuilder, Utxo, WcTransactionOptions } from 'cashscript';
+import { SendRequest, SendResponse } from 'mainnet-js';
 import { describe, expect, test } from 'vitest';
 import { PrivKeyConnector, signWcTransaction } from '../src/index.js';
 import P2pkhArtifact from './P2pkh.artifact.js';
 import { aliceAddress, alicePkh, alicePriv, bobAddress, MockWallet } from './shared.js';
+
+const generateWcSignTransactionRequest = (
+  sendResponse: SendResponse,
+  options?: WcTransactionOptions
+): WcSignTransactionRequest => {
+  if (!sendResponse.unsignedTransaction || !sendResponse.sourceOutputs) {
+    throw new Error(
+      "SendResponse does not contain an unsigned transaction or source outputs"
+    );
+  }
+
+  return {
+    ...options,
+    transaction: sendResponse.unsignedTransaction,
+    sourceOutputs: sendResponse.sourceOutputs,
+  };
+};
 
 describe("WalletConnect", () => {
   test("Creating unsigned transactions and signing them", async () => {

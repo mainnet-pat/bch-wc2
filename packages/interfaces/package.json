@@ -9,11 +9,11 @@
     "test": "echo \"No tests specified\" && exit 0"
   },
   "peerDependencies": {
-    "@bitauth/libauth": "^3.1.0-next.2"
+    "@bitauth/libauth": "^3.1.0-next.8"
   },
   "devDependencies": {
-    "@bitauth/libauth": "^3.1.0-next.2",
+    "@bitauth/libauth": "^3.1.0-next.8",
     "typescript": "^5.8.3"
   },
-  "gitHead": "15a75fa805ceb400dedcc25137ecac71d6586f1f"
+  "gitHead": "d0d2db0ea2b2022110583a0c58d4b8198a3d8570"
 }
