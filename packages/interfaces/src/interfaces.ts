@@ -33,12 +33,15 @@ export interface Artifact {
 
 export type WcSourceOutput = Input & Output & ContractInfo;
 
-export interface WcSignTransactionRequest {
-  transaction: Transaction | string;
-  sourceOutputs: WcSourceOutput[];
+export interface WcTransactionOptions {
   broadcast?: boolean;
   userPrompt?: string;
 }
+
+export interface WcSignTransactionRequest extends WcTransactionOptions {
+  transaction: Transaction | string;
+  sourceOutputs: WcSourceOutput[];
+};
 
 export interface WcSignTransactionResponse {
   signedTransaction: string;

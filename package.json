@@ -1,16 +1,16 @@
 {
   "name": "@bch-wc2/root",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.13",
   "workspaces": [
     "packages/*"
   ],
   "license": "MIT",
-  "devDependencies": {
-    "lerna": "^8.2.3"
-  },
+  "devDependencies": {},
   "scripts": {
-    "publish": "lerna publish from-package",
-    "build": "lerna run build"
+    "bump": "node bump_version.cjs",
+    "publish": "yarn workspaces run publish:public",
+    "build": "yarn workspaces run build",
+    "test": "yarn workspaces run test"
   }
 }

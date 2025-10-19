@@ -1,6 +1,6 @@
-import { secp256k1, encodeLockingBytecodeP2pkh, encodeCashAddress, binToHex, sha256, utf8ToBin, hexToBin, binToBase64 } from "@bitauth/libauth";
 import { IConnector, WcSignMessageRequest, WcSignTransactionRequest, WcSignTransactionResponse } from "@bch-wc2/interfaces";
-import { signMessage, signWcTransaction } from "./signing";
+import { binToHex, encodeCashAddress, encodeLockingBytecodeP2pkh, hash160, hexToBin, secp256k1, sha256 } from "@bitauth/libauth";
+import { signMessage, signWcTransaction } from "./signing.js";
 
 export interface NetworkProvider {
   sendRawTransaction: (hexTransaction: string) => Promise<string>;
@@ -40,7 +40,7 @@ export class PrivKeyConnector implements IConnector {
     }
 
     if (!walletLockingBytecodeHex) {
-      this.walletLockingBytecodeHex = binToHex(encodeLockingBytecodeP2pkh(this.pubkeyCompressed) as Uint8Array);
+      this.walletLockingBytecodeHex = binToHex(encodeLockingBytecodeP2pkh(hash160(this.pubkeyCompressed)) as Uint8Array);
     } else {
       this.walletLockingBytecodeHex = walletLockingBytecodeHex;
     }

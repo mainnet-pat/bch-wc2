@@ -10,6 +10,10 @@ This repo contains no code other than interfaces for WC2 BCH connector.
 
 This is a simple implementation of `IConnector` interface which makes use of provided private key to handle transaction signing and message signing requests. It is a very useful tool for local development and testing. See tests for usage patterns with `mainnet-js` and `cashscript`.
 
+## @bch-wc2/mainnet-js-signer
+
+`WrapWallet` allows to wrap a mainnet-js wallet and use a provided `IConnector` to delegate the signing to.
+
 ## @bch-wc2/wc2-connector
 
 To be done.

@@ -1,10 +1,28 @@
+import { WcSignTransactionRequest } from '@bch-wc2/interfaces';
 import { binToHex } from '@bitauth/libauth';
-import { Contract, MockNetworkProvider, placeholderPublicKey, placeholderSignature, randomUtxo, TransactionBuilder, Utxo } from 'cashscript';
-import { SendRequest } from 'mainnet-js';
+import { Contract, MockNetworkProvider, placeholderP2PKHUnlocker, placeholderPublicKey, placeholderSignature, randomUtxo, TransactionBuilder, Utxo, WcTransactionOptions } from 'cashscript';
+import { SendRequest, SendResponse } from 'mainnet-js';
 import { describe, expect, test } from 'vitest';
 import { PrivKeyConnector, signWcTransaction } from '../src/index.js';
-import { aliceAddress, alicePkh, alicePriv, bobAddress, generateWcTransactionObject, MockWallet } from './shared.js';
 import P2pkhArtifact from './P2pkh.artifact.js';
+import { aliceAddress, alicePkh, alicePriv, bobAddress, MockWallet } from './shared.js';
+
+const generateWcSignTransactionRequest = (
+  sendResponse: SendResponse,
+  options?: WcTransactionOptions
+): WcSignTransactionRequest => {
+  if (!sendResponse.unsignedTransaction || !sendResponse.sourceOutputs) {
+    throw new Error(
+      "SendResponse does not contain an unsigned transaction or source outputs"
+    );
+  }
+
+  return {
+    ...options,
+    transaction: sendResponse.unsignedTransaction,
+    sourceOutputs: sendResponse.sourceOutputs,
+  };
+};
 
 describe("WalletConnect", () => {
   test("Creating unsigned transactions and signing them", async () => {
@@ -25,7 +43,7 @@ describe("WalletConnect", () => {
       queryBalance: false,
     });
 
-    const wcTransactionObject = generateWcTransactionObject(sendResponse, {
+    const wcTransactionObject = generateWcSignTransactionRequest(sendResponse, {
       userPrompt: "Please confirm the transaction",
     });
 
@@ -56,7 +74,7 @@ describe("WalletConnect", () => {
       queryBalance: false,
     });
 
-    const wcTransactionObject = generateWcTransactionObject(sendResponse, {
+    const wcTransactionObject = generateWcSignTransactionRequest(sendResponse, {
       userPrompt: "Please confirm the transaction",
       broadcast: true,
     });
@@ -103,7 +121,10 @@ describe("WalletConnect", () => {
 
     expect(await p2pkhContract.getUtxos()).toHaveLength(1);
 
+    const p2pkhInput = (await provider.getUtxos(aliceAddress))[0]!;
+
     const builder = new TransactionBuilder({ provider })
+      .addInput(p2pkhInput, placeholderP2PKHUnlocker(aliceAddress))
       .addInput((await p2pkhContract.getUtxos())[0], p2pkhContract.unlock.spend(placeholderPublicKey(), placeholderSignature()))
       .addOutput({ to: bobAddress, amount: 9000n });
 

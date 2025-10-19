@@ -1,9 +1,9 @@
-import { Input, Output, TransactionCommon, binToHex, encodeCashAddress, encodePrivateKeyWif, hash160, hexToBin, secp256k1 } from "@bitauth/libauth";
 import { ContractInfo, WcSignTransactionRequest } from "@bch-wc2/interfaces";
+import { Input, Output, TransactionCommon, binToHex, encodeCashAddress, encodePrivateKeyWif, hash160, hexToBin, secp256k1 } from "@bitauth/libauth";
+import { MockNetworkProvider, SignatureTemplate } from "cashscript";
+import { TestNetWallet, TokenI, UtxoI } from "mainnet-js";
 import { NetworkProvider } from "../src/PrivKeyConnector.js";
 import { signWcTransaction } from "../src/signing.js";
-import { SignatureTemplate, MockNetworkProvider } from "cashscript";
-import { TestNetWallet, UtxoI, TokenI } from "mainnet-js";
 
 export const alicePriv = hexToBin('1'.repeat(64));
 export const aliceSigTemplate = new SignatureTemplate(alicePriv);
@@ -51,14 +51,6 @@ export interface SendResponse {
 export interface WcTransactionOptions {
   broadcast?: boolean;
   userPrompt?: string;
-}
-
-export const generateWcTransactionObject = (sendResponse: SendResponse, options?: WcTransactionOptions): WcSignTransactionRequest => {
-  if (!sendResponse.unsignedTransaction || !sendResponse.sourceOutputs) {
-    throw new Error("SendResponse does not contain an unsigned transaction or source outputs");
-  }
-
-  return { ...options, transaction: sendResponse.unsignedTransaction, sourceOutputs: sendResponse.sourceOutputs };
 }
 
 export const processWcTransactionObject = async (

@@ -1,4 +1,4 @@
-import { WcSignTransactionRequest, WcSignTransactionResponse, WcSignMessageRequest, WcSignMessageResponse } from "./interfaces";
+import { WcSignTransactionRequest, WcSignTransactionResponse, WcSignMessageRequest, WcSignMessageResponse } from "./interfaces.js";
 
 export interface IConnector {
   address: () => Promise<string | undefined>;
