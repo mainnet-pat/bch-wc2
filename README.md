@@ -14,6 +14,10 @@ This is a simple implementation of `IConnector` interface which makes use of pro
 
 `WrapWallet` allows to wrap a mainnet-js wallet and use a provided `IConnector` to delegate the signing to.
 
+## @bch-wc2/cashscript-signer
+
+`WrapBuilder` allows to wrap a cashscript TransactionBuilder and use a provided `IConnector` to delegate the signing to.
+
 ## @bch-wc2/wc2-connector
 
 To be done.

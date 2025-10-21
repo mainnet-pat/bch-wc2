@@ -1,13 +1,12 @@
-import { binToHex } from "@bitauth/libauth";
-import { RegTestWallet } from "mainnet-js";
-import { generateWcSignTransactionRequest, WrapWallet } from "../src/Signer";
 import { WcSignTransactionRequest } from "@bch-wc2/interfaces";
 import {
   PrivKeyConnector,
   signWcTransaction,
 } from "@bch-wc2/privkey-connector";
-import { NetworkProvider } from "mainnet-js";
+import { binToHex } from "@bitauth/libauth";
+import { NetworkProvider, RegTestWallet } from "mainnet-js";
 import { describe, expect, test } from 'vitest';
+import { generateWcSignTransactionRequest, WrapWallet } from "../src/Signer";
 
 const ALICE_ID="wif:regtest:cNfsPtqN2bMRS7vH5qd8tR8GMvgXyL5BjnGAKgZ8DYEiCrCCQcP6"
 
@@ -114,5 +113,12 @@ describe("Wallet Connect Utility Functions", () => {
     expect(sendResponse.signedTransaction).toBeDefined();
 
     expect(await bob.getBalance("sat")).toBe(5000);
+
+    // check proxy forwards property sets
+    wcSigner.name = "New Name";
+    expect(wallet.name).toBe("New Name");
+
+    wallet.name = "Alice";
+    expect(wcSigner.name).toBe("Alice");
   });
 });

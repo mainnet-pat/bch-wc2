@@ -21,11 +21,13 @@ const workspacePackageFiles = [
   "./packages/interfaces/package.json",
   "./packages/privkey-connector/package.json",
   "./packages/mainnet-js-signer/package.json",
+  "./packages/cashscript-signer/package.json",
 ];
 const workspacePackages = [
   "@bch-wc2/interfaces",
   "@bch-wc2/privkey-connector",
   "@bch-wc2/mainnet-js-signer",
+  "@bch-wc2/cashscript-signer",
 ];
 
 // Get the package version from the root package
