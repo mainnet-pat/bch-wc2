@@ -17,6 +17,5 @@
     "mainnet-js": "^2.7.24",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
-  },
-  "gitHead": "c2fc5e8e438b27f5d547bde48410e6a8e1436095"
+  }
 }

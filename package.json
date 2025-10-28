@@ -3,6 +3,11 @@
   "private": true,
   "version": "0.0.14",
   "workspaces": [
+    "packages/interfaces",
+    "packages/privkey-connector",
+    "packages/web3modal-connector",
+    "packages/mainnet-js-signer",
+    "packages/cashscript-signer",
     "packages/*"
   ],
   "license": "MIT",
@@ -11,6 +16,7 @@
     "bump": "node bump_version.cjs",
     "publish": "yarn workspaces run publish:public",
     "build": "yarn workspaces run build",
-    "test": "yarn workspaces run test"
+    "test": "yarn workspaces run test",
+    "clean": "rm -rf packages/**/dist"
   }
 }

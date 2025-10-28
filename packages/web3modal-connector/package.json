@@ -1,0 +1,31 @@
+{
+  "name": "@bch-wc2/web3modal-connector",
+  "version": "0.0.14",
+  "main": "dist/index.js",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest --run",
+    "publish:public": "yarn publish --access public"
+  },
+  "dependencies": {
+    "@bch-wc2/interfaces": "0.0.14",
+    "@bitauth/libauth": "3.1.0-next.8",
+    "@walletconnect/sign-client": "^2.22.4",
+    "@walletconnect/types": "^2.22.4",
+    "@walletconnect/utils": "^2.22.4",
+    "@web3modal/standalone": "^2.4.3"
+  },
+  "peerDependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  }
+}
