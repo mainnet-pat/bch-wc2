@@ -1,7 +1,7 @@
 {
   "name": "@bch-wc2/root",
   "private": true,
-  "version": "0.0.14",
+  "version": "0.0.15",
   "workspaces": [
     "packages/interfaces",
     "packages/privkey-connector",

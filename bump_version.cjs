@@ -20,12 +20,14 @@ const workspacePackageFiles = [
   "./package.json",
   "./packages/interfaces/package.json",
   "./packages/privkey-connector/package.json",
+  "./packages/web3modal-connector/package.json",
   "./packages/mainnet-js-signer/package.json",
   "./packages/cashscript-signer/package.json",
 ];
 const workspacePackages = [
   "@bch-wc2/interfaces",
   "@bch-wc2/privkey-connector",
+  "@bch-wc2/web3modal-connector",
   "@bch-wc2/mainnet-js-signer",
   "@bch-wc2/cashscript-signer",
 ];
