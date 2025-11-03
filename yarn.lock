@@ -757,6 +757,14 @@
     buffer "6.0.3"
     valtio "1.10.5"
 
+"@web3modal/core@npm:@mainnet-pat/web3modal-core-patch":
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/@mainnet-pat/web3modal-core-patch/-/web3modal-core-patch-2.4.3.tgz#02edf835ebcd0ef72c28cd9843fab1acbda3f76c"
+  integrity sha512-ip/IX/yXBf+ceIrt6IaMufbA6ElAucRXPWCH9vKQwTJOmdGT0LWDT4wLXoIvT6GuSaeUI5yjax0SGhhjCGEV2g==
+  dependencies:
+    buffer "6.0.3"
+    valtio "1.10.5"
+
 "@web3modal/standalone@^2.4.3":
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/@web3modal/standalone/-/standalone-2.4.3.tgz#98aaa65eba725c34d5be9078ef04b4e9b769d0f3"
